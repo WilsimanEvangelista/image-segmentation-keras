@@ -21,7 +21,7 @@ def _conv_block(inputs, filters, alpha, kernel=(3, 3), strides=(1, 1)):
                       data_format=IMAGE_ORDERING)(inputs)
     x = Conv2D(filters, kernel, data_format=IMAGE_ORDERING,
                padding='valid',
-               use_bias=False,
+               use_bias=True,
                strides=strides,
                name='conv1')(x)
     x = BatchNormalization(axis=channel_axis, name='conv1_bn')(x)
@@ -40,7 +40,7 @@ def _depthwise_conv_block(inputs, pointwise_conv_filters, alpha,
                         padding='valid',
                         depth_multiplier=depth_multiplier,
                         strides=strides,
-                        use_bias=False,
+                        use_bias=True,
                         name='conv_dw_%d' % block_id)(x)
     x = BatchNormalization(
         axis=channel_axis, name='conv_dw_%d_bn' % block_id)(x)
@@ -48,7 +48,7 @@ def _depthwise_conv_block(inputs, pointwise_conv_filters, alpha,
 
     x = Conv2D(pointwise_conv_filters, (1, 1), data_format=IMAGE_ORDERING,
                padding='same',
-               use_bias=False,
+               use_bias=True,
                strides=(1, 1),
                name='conv_pw_%d' % block_id)(x)
     x = BatchNormalization(axis=channel_axis,
@@ -71,7 +71,7 @@ def get_mobilenet_encoder(input_height=224, input_width=224,
 
     alpha = 1.0
     depth_multiplier = 1
-    dropout = 1e-3
+    dropout = 1e-2
 
     img_input = Input(shape=(input_height, input_width, channels))
 
